@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.car.center.dto.MecanicosEntity" table="mecanicos" schema="public" catalog="car_center">
+        <id name="id" column="id"/>
+        <property name="tipoDocumento" column="tipo_documento"/>
+        <property name="documento" column="documento"/>
+        <property name="primerNombre" column="primer_nombre"/>
+        <property name="segundoNombre" column="segundo_nombre"/>
+        <property name="primerApellido" column="primer_apellido"/>
+        <property name="segundoApellido" column="segundo_apellido"/>
+        <property name="celular" column="celular"/>
+        <property name="direccion" column="direccion"/>
+        <property name="email" column="email"/>
+        <property name="estado" column="estado"/>
+    </class>
+</hibernate-mapping>

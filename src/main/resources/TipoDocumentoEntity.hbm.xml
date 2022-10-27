@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.car.center.dto.TipoDocumentoEntity" table="tipo_documento" schema="public" catalog="car_center">
+        <id name="id" column="id"/>
+        <property name="codigo" column="codigo"/>
+        <property name="nombre" column="nombre"/>
+    </class>
+</hibernate-mapping>
