@@ -31,7 +31,7 @@ public class MecanicosController {
             "los mecanicos", nickname = "guardar")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok", response = ProcesoResponse.class),
             @ApiResponse(code = 500, message = "USRMSG-Se presento un problema, reporte e intente luego"),
-            @ApiResponse(code = 400, message = "USRMSG-El tipo de documento es obligatorio ")})
+            @ApiResponse(code = 400, message = "USRMSG-Data enviada es invalida ")})
     @PostMapping(value = "/guardar")
     public ResponseEntity<ProcesoResponse> guarar(@Valid @RequestBody MecanicosRequest mecanicosRequest, BindingResult result) {
         log.debug("Creando mecanico con data {}", mecanicosRequest);
@@ -45,9 +45,13 @@ public class MecanicosController {
             "los mecanicos", nickname = "actualizar")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok", response = ProcesoResponse.class),
             @ApiResponse(code = 500, message = "USRMSG-Se presento un problema, reporte e intente luego"),
-            @ApiResponse(code = 400, message = "USRMSG-No existe Mecanico con el id: ")})
+            @ApiResponse(code = 400, message = "USRMSG-Data enviada es invalida ")})
     @PostMapping(value = "/actualizar")
-    public ResponseEntity<ProcesoResponse> actualizar(@RequestBody MecanicosRequest mecanicosRequest) {
+    public ResponseEntity<ProcesoResponse> actualizar(@Valid @RequestBody MecanicosRequest mecanicosRequest, BindingResult result) {
+        log.debug("Creando mecanico con data {}", mecanicosRequest);
+        if (result.hasErrors()) {
+            throw new InvalidDataException(result);
+        }
         return ResponseEntity.ok().body(mecanicosService.actualizar(mecanicosRequest));
     }
 
