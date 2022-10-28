@@ -17,5 +17,5 @@ public class ProcesoResponse {
 
 	private Boolean estado;
 
-	private String msj;
+	private String mensaje;
 }

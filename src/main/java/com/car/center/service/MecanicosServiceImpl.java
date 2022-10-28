@@ -1,19 +1,17 @@
 package com.car.center.service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import com.car.center.dto.MecanicosDTO;
-import com.car.center.exception.InvalidDataException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.car.center.mapper.MecanicosMapper;
 import com.car.center.repository.MecanicosRepository;
 import com.car.center.request.MecanicosRequest;
 import com.car.center.response.MecanicosResponse;
 import com.car.center.response.ProcesoResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class MecanicosServiceImpl implements MecanicosService {
@@ -33,7 +31,7 @@ public class MecanicosServiceImpl implements MecanicosService {
         }
         mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
         response.setEstado(true);
-        response.setMsj("Se guardo con exito");
+        response.setMensaje("Se guardo con exito");
         return response;
     }
 
@@ -45,7 +43,7 @@ public class MecanicosServiceImpl implements MecanicosService {
         if (mecanicoId.isPresent()) {
             mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
             response.setEstado(true);
-            response.setMsj("Se actualizo la informacion");
+            response.setMensaje("Se actualizo la informacion");
         } else {
             throw new NoSuchElementException("No existe Mecanico con el id: " + mecanicosRequest.getId());
         }
@@ -60,7 +58,7 @@ public class MecanicosServiceImpl implements MecanicosService {
         if (mecanico.isPresent()) {
             mecanicosRepository.deleteById(mecanicosId);
             response.setEstado(true);
-            response.setMsj("Se elimino el mecanico");
+            response.setMensaje("Se elimino el mecanico");
         } else {
             throw new NoSuchElementException("No existe Mecanico con el id: " + mecanicosId);
         }
@@ -70,12 +68,18 @@ public class MecanicosServiceImpl implements MecanicosService {
     @Override
     public List<MecanicosResponse> consultar() {
         List<MecanicosDTO> response = mecanicosRepository.findAll();
+        if (response.isEmpty()) {
+            throw new NoSuchElementException("No existen mecanicos");
+        }
         return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
     }
 
     @Override
     public List<MecanicosResponse> consultarPorEstado(String estado) {
-        List<MecanicosDTO> response = mecanicosRepository.findAllByEstado(estado);
-        return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
+        List<MecanicosDTO> responseEstado = mecanicosRepository.findAllByEstado(estado);
+        if (responseEstado.isEmpty()) {
+            throw new NoSuchElementException("No existe mecanico con el estado: " + estado);
+        }
+        return mecanicosMapper.mecanicosDTOToMecanicosResponse(responseEstado);
     }
 }
