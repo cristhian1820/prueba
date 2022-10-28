@@ -8,13 +8,13 @@ import com.car.center.response.ProcesoResponse;
 
 public interface MecanicosService {
 
-	ProcesoResponse guardar(MecanicosRequest mecanicosRequest) throws Exception;
+	ProcesoResponse guardar(MecanicosRequest mecanicosRequest);
 	
-	ProcesoResponse actualizar(MecanicosRequest mecanicosRequest) throws Exception;
+	ProcesoResponse actualizar(MecanicosRequest mecanicosRequest) ;
 	
-	ProcesoResponse eliminar(Long mecanicosId) throws Exception;
+	ProcesoResponse eliminar(Long mecanicosId) ;
 	
-	List<MecanicosResponse> consultar() throws Exception;
+	List<MecanicosResponse> consultar();
 
-	List<MecanicosResponse> consultarPorEstado(String estado) throws Exception;
+	List<MecanicosResponse> consultarPorEstado(String estado) ;
 }

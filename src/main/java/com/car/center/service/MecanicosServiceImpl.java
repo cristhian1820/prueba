@@ -1,9 +1,11 @@
 package com.car.center.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import com.car.center.dto.MecanicosDTO;
+import com.car.center.exception.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,72 +25,57 @@ public class MecanicosServiceImpl implements MecanicosService {
     private MecanicosMapper mecanicosMapper;
 
     @Override
-    public ProcesoResponse guardar(MecanicosRequest mecanicosRequest) throws Exception {
-        try {
-            MecanicosDTO a = mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
-            ProcesoResponse b = new ProcesoResponse();
-            if (a != null) {
-                b.setEstado(true);
-                b.setMsj("Se guardo con exito");
-            } else {
-                b.setEstado(false);
-                b.setMsj("No se guardo");
-            }
-            return b;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+    public ProcesoResponse guardar(MecanicosRequest mecanicosRequest) {
+
+        ProcesoResponse response = new ProcesoResponse();
+        if (mecanicosRequest.getTipoDocumento() == null) {
+            throw new NoSuchElementException("El tipo de documento es obligatorio");
         }
+        mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
+        response.setEstado(true);
+        response.setMsj("Se guardo con exito");
+        return response;
     }
 
     @Override
-    public ProcesoResponse actualizar(MecanicosRequest mecanicosRequest) throws Exception {
-        try {
-            ProcesoResponse response = new ProcesoResponse();
-            Object existeMecanico = mecanicosRepository.findById(mecanicosRequest.getId());
-            if (existeMecanico != null) {
-                MecanicosDTO mecanicoActualizado = mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
-                response.setEstado(true);
-                response.setMsj("Se actualizo la informacion");
-            } else {
-                throw new Exception("El id del mecanico no existe");
-            }
-            return response;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+    public ProcesoResponse actualizar(MecanicosRequest mecanicosRequest) {
+
+        ProcesoResponse response = new ProcesoResponse();
+        Optional<MecanicosDTO> mecanicoId = mecanicosRepository.findById(mecanicosRequest.getId());
+        if (mecanicoId.isPresent()) {
+            mecanicosRepository.save(mecanicosMapper.mecanicosRequestToMecaniosDTO(mecanicosRequest));
+            response.setEstado(true);
+            response.setMsj("Se actualizo la informacion");
+        } else {
+            throw new NoSuchElementException("No existe Mecanico con el id: " + mecanicosRequest.getId());
         }
+        return response;
     }
 
     @Override
-    public ProcesoResponse eliminar(Long mecanicosId) throws Exception {
-        try {
-            ProcesoResponse response = new ProcesoResponse();
+    public ProcesoResponse eliminar(Long mecanicosId) {
+
+        ProcesoResponse response = new ProcesoResponse();
+        Optional<MecanicosDTO> mecanico = mecanicosRepository.findById(mecanicosId);
+        if (mecanico.isPresent()) {
             mecanicosRepository.deleteById(mecanicosId);
             response.setEstado(true);
             response.setMsj("Se elimino el mecanico");
-            return response;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        } else {
+            throw new NoSuchElementException("No existe Mecanico con el id: " + mecanicosId);
         }
+        return response;
     }
 
     @Override
-    public List<MecanicosResponse> consultar() throws Exception {
-        try {
-            List<MecanicosDTO> response = mecanicosRepository.findAll();
-            return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<MecanicosResponse> consultar() {
+        List<MecanicosDTO> response = mecanicosRepository.findAll();
+        return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
     }
 
     @Override
-    public List<MecanicosResponse> consultarPorEstado(String estado) throws Exception {
-        try {
-            List<MecanicosDTO> response = mecanicosRepository.findAllByEstado(estado);
-            return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<MecanicosResponse> consultarPorEstado(String estado) {
+        List<MecanicosDTO> response = mecanicosRepository.findAllByEstado(estado);
+        return mecanicosMapper.mecanicosDTOToMecanicosResponse(response);
     }
-
 }
